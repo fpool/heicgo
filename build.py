@@ -223,14 +223,14 @@ T = {
 ORDER = ["en","de","fr","es","ja","ko","zh-cn","zh-tw"]
 
 NAV = {
- "en":("Why convert?","How it works","FAQ"),
- "de":("Warum konvertieren?","Anleitung","FAQ"),
- "fr":("Pourquoi ?","Fonctionnement","FAQ"),
- "es":("¿Por qué?","Cómo funciona","Preguntas"),
- "ja":("変換の理由","使い方","よくある質問"),
- "ko":("변환 이유","사용 방법","FAQ"),
- "zh-cn":("为什么转换","使用方法","常见问题"),
- "zh-tw":("為什麼轉換","使用方法","常見問題"),
+ "en":("Why convert?","How it works","FAQ","Privacy","About"),
+ "de":("Warum konvertieren?","Anleitung","FAQ","Datenschutz","Über uns"),
+ "fr":("Pourquoi ?","Fonctionnement","FAQ","Confidentialité","À propos"),
+ "es":("¿Por qué?","Cómo funciona","Preguntas","Privacidad","Acerca de"),
+ "ja":("変換の理由","使い方","よくある質問","プライバシー","サイト情報"),
+ "ko":("변환 이유","사용 방법","FAQ","개인정보","소개"),
+ "zh-cn":("为什么转换","使用方法","常见问题","隐私政策","关于"),
+ "zh-tw":("為什麼轉換","使用方法","常見問題","隱私政策","關於"),
 }
 
 BASE = (Path(__file__).parent / "template.html").read_text(encoding="utf-8")
@@ -280,8 +280,9 @@ def build(code):
     html = html.replace('</head>', faq_jsonld(t) + '\n</head>', 1)
     html = html.replace('<html lang="en">', f'<html lang="{code}">')
     # nav 语言下拉 + 导航链接
-    nw, nh, nf = NAV[code]
-    html = (html.replace('__NAV_WHY__', nw).replace('__NAV_HOW__', nh).replace('__NAV_FAQ__', nf))
+    nw, nh, nf, npriv, nab = NAV[code]
+    html = (html.replace('__NAV_WHY__', nw).replace('__NAV_HOW__', nh).replace('__NAV_FAQ__', nf)
+                .replace('__NAV_PRIVACY__', npriv).replace('__NAV_ABOUT__', nab))
     html = html.replace('__LANGSWITCH__', lang_switcher(code))
     # 正文
     html = html.replace("<h1>HEIC to JPG Converter</h1>", f"<h1>{t['h1']}</h1>")
