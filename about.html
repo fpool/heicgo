@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>About HeicGo — Free, Private Image Tools</title>
+<meta name="description" content="HeicGo builds free browser-based image tools that respect your privacy. No upload, no signup, no watermark — just tools that work.">
+<script>try{const t=localStorage.getItem('theme');if(t==='dark'||(!t&&matchMedia('(prefers-color-scheme: dark)').matches))document.documentElement.dataset.theme='dark';}catch(e){}</script>
+<style>
+  :root { --brand:#2563eb; --bg:#f8fafc; --card:#fff; --text:#0f172a; --muted:#475569; --faint:#64748b; --border:#e2e8f0; --shadow:rgba(0,0,0,.07); }
+  [data-theme="dark"] { --brand:#60a5fa; --bg:#0b1220; --card:#111a2c; --text:#e6edf7; --muted:#9fb0c7; --faint:#7c8aa0; --border:#1e293b; --shadow:rgba(0,0,0,.45); }
+  * { box-sizing:border-box; margin:0; padding:0; }
+  body { font-family:-apple-system,"Segoe UI",Roboto,Arial,sans-serif; color:var(--text); background:var(--bg); line-height:1.7; }
+  header { position:sticky; top:0; z-index:100; background:var(--card); border-bottom:1px solid var(--border); padding:14px 24px; box-shadow:0 1px 10px var(--shadow); }
+  .header-inner { max-width:960px; margin:0 auto; display:flex; align-items:center; justify-content:space-between; }
+  .logo { font-weight:800; font-size:20px; color:var(--brand); text-decoration:none; }
+  .nav-links a { color:var(--muted); margin-left:22px; text-decoration:none; font-size:14px; }
+  .nav-links a:hover { color:var(--brand); }
+  main { max-width:820px; margin:0 auto; padding:40px 20px 64px; }
+  h1 { font-size:28px; margin-bottom:20px; }
+  h2 { font-size:19px; margin:30px 0 10px; }
+  p, li { color:var(--muted); font-size:15px; margin-bottom:10px; }
+  ul { padding-left:22px; }
+  a { color:var(--brand); }
+  footer { text-align:center; color:var(--faint); font-size:13px; padding:28px; border-top:1px solid var(--border); margin-top:40px; }
+</style>
+</head>
+<body>
+<header><div class="header-inner">
+  <a class="logo" href="/">🖼️ HeicGo</a>
+  <nav class="nav-links"><a href="/">Home</a><a href="/#faq">FAQ</a><a href="/privacy.html">Privacy</a></nav>
+</div></header>
+<main>
+  <h1>About HeicGo</h1>
+
+  <p>HeicGo makes small, sharp image tools that run <b>entirely in your browser</b>. Our first tool — a HEIC to JPG converter — was born from a simple observation: hundreds of millions of iPhone photos are trapped in a format that Windows and the web still struggle to open, and most "free" online converters make you upload private photos to a server just to change a file format.</p>
+
+  <p>We think that's backwards. Converting a photo doesn't require a server. So HeicGo does it on your device, using WebAssembly — your photos never leave your browser, and the tool even works offline once loaded.</p>
+
+  <h2>Our principles</h2>
+  <ul>
+    <li><b>Privacy is the default.</b> Files are processed locally; there is no upload step to remove, because there never was one.</li>
+    <li><b>Free means free.</b> No signup, no watermark, no daily limits, no "premium" unlock.</li>
+    <li><b>Fast beats fancy.</b> One page, one job, done in seconds.</li>
+  </ul>
+
+  <h2>What's next</h2>
+  <p>HeicGo currently serves 8 languages (English, German, French, Spanish, Japanese, Korean, Simplified and Traditional Chinese) and we're steadily adding tools. If an image task annoys you, chances are we're working on it.</p>
+
+  <h2>Contact</h2>
+  <p>Say hello or report an issue: <b>liuyulong667@gmail.com</b>. We read everything.</p>
+</main>
+<footer>HeicGo — free private image tools. © 2026</footer>
+</body>
+</html>

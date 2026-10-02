@@ -1,23 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
-        xmlns:xhtml="http://www.w3.org/1999/xhtml">
-  <url>
-    <loc>https://heicgo-ecc.pages.dev/</loc>
-    <xhtml:link rel="alternate" hreflang="en" href="https://heicgo-ecc.pages.dev/"/>
-    <xhtml:link rel="alternate" hreflang="de" href="https://heicgo-ecc.pages.dev/de.html"/>
-    <xhtml:link rel="alternate" hreflang="fr" href="https://heicgo-ecc.pages.dev/fr.html"/>
-    <xhtml:link rel="alternate" hreflang="es" href="https://heicgo-ecc.pages.dev/es.html"/>
-    <xhtml:link rel="alternate" hreflang="ja" href="https://heicgo-ecc.pages.dev/ja.html"/>
-    <xhtml:link rel="alternate" hreflang="ko" href="https://heicgo-ecc.pages.dev/ko.html"/>
-    <xhtml:link rel="alternate" hreflang="zh-cn" href="https://heicgo-ecc.pages.dev/zh-cn.html"/>
-    <xhtml:link rel="alternate" hreflang="zh-tw" href="https://heicgo-ecc.pages.dev/zh-tw.html"/>
-    <xhtml:link rel="alternate" hreflang="x-default" href="https://heicgo-ecc.pages.dev/"/>
-  </url>
-  <url><loc>https://heicgo-ecc.pages.dev/de.html</loc></url>
-  <url><loc>https://heicgo-ecc.pages.dev/fr.html</loc></url>
-  <url><loc>https://heicgo-ecc.pages.dev/es.html</loc></url>
-  <url><loc>https://heicgo-ecc.pages.dev/ja.html</loc></url>
-  <url><loc>https://heicgo-ecc.pages.dev/ko.html</loc></url>
-  <url><loc>https://heicgo-ecc.pages.dev/zh-cn.html</loc></url>
-  <url><loc>https://heicgo-ecc.pages.dev/zh-tw.html</loc></url>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+  <url><loc>https://heicgo-ecc.pages.dev/</loc></url>
+  <url><loc>https://heicgo-ecc.pages.dev/de</loc></url>
+  <url><loc>https://heicgo-ecc.pages.dev/fr</loc></url>
+  <url><loc>https://heicgo-ecc.pages.dev/es</loc></url>
+  <url><loc>https://heicgo-ecc.pages.dev/ja</loc></url>
+  <url><loc>https://heicgo-ecc.pages.dev/ko</loc></url>
+  <url><loc>https://heicgo-ecc.pages.dev/zh-cn</loc></url>
+  <url><loc>https://heicgo-ecc.pages.dev/zh-tw</loc></url>
 </urlset>

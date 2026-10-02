@@ -248,7 +248,8 @@ def lang_switcher(cur):
     return f'<div class="lang">{btn}<div class="lang-menu">{items}</div></div>'
 
 def hreflangs(cur):
-    lines = [f'  <link rel="alternate" hreflang="{c}" href="https://heicgo-ecc.pages.dev/{T[c]["file"]}">' for c in ORDER]
+    lines = [f'  <link rel="alternate" hreflang="{c}" href="https://heicgo-ecc.pages.dev/">' if c == "en"
+             else f'  <link rel="alternate" hreflang="{c}" href="https://heicgo-ecc.pages.dev/{c}">' for c in ORDER]
     lines.append('  <link rel="alternate" hreflang="x-default" href="https://heicgo-ecc.pages.dev/">')
     return "\n".join(lines)
 
@@ -274,7 +275,7 @@ def build(code):
         '<title>HEIC to JPG Converter — Free, Private, No Upload | HeicGo</title>',
         f'<title>{t["h1"]} — Free, Private, No Upload | {t["title_suffix"]}</title>')
     html = html.replace('</title>', '</title>\n' + hreflangs(code), 1)
-    canon = "https://heicgo-ecc.pages.dev/" if code == "en" else f"https://heicgo-ecc.pages.dev/{t['file']}"
+    canon = "https://heicgo-ecc.pages.dev/" if code == "en" else f"https://heicgo-ecc.pages.dev/{code}"
     html = html.replace('__CANONICAL__', canon)
     html = html.replace('</head>', faq_jsonld(t) + '\n</head>', 1)
     html = html.replace('<html lang="en">', f'<html lang="{code}">')
