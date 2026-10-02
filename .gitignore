@@ -1,0 +1,6 @@
+deploy/
+__pycache__/
+*.pyc
+sample1.heic
+sample2.heic
+.DS_Store
