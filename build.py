@@ -237,9 +237,10 @@ BASE = (Path(__file__).parent / "template.html").read_text(encoding="utf-8")
 if "PicVault" in BASE:
     raise SystemExit("template.html 里还有 PicVault，请先确认改名完成")
 
-def lang_switcher(cur):
+def lang_switcher(cur, href_for=None):
+    hf = href_for or (lambda c: T[c]["file"])
     items = "".join(
-        f'<a href="{T[c]["file"]}"{" class=\"cur\"" if c==cur else ""}>{T[c]["name"]}</a>'
+        f'<a href="{hf(c)}"{" class=\"cur\"" if c==cur else ""}>{T[c]["name"]}</a>'
         for c in ORDER)
     btn = ('<button id="langBtn" aria-haspopup="true" aria-expanded="false">'
            f'{T[cur]["name"]}'
@@ -324,9 +325,203 @@ def build(code):
     html = html.replace('⬇ Download all as ZIP', t["zip"])
     return html
 
+# ---------- 子页面(隐私政策/关于)多语言数据 ----------
+CONTACT = "<b>liuyulong667@gmail.com</b>"
+
+PRIV = {
+"en": {"title":"Privacy Policy","h1":"Privacy Policy","updated":"October 2, 2026",
+ "meta":"HeicGo privacy policy — how we handle data in our browser-based image tools, including cookies and third-party advertising.",
+ "intro":"HeicGo (“we”, “our”) operates free browser-based image tools, including the HEIC to JPG converter available at heicgo-ecc.pages.dev. This policy explains what data is — and is not — collected when you use our tools.",
+ "sections":[
+  ("1. Your photos and files",["<b>We do not collect, store, or transmit your photos.</b> All conversion happens locally in your browser using WebAssembly. When you drop a file into our tools, it is processed by your own device and never uploaded to any server. Closing or reloading the page erases everything."]),
+  ("2. Server logs",["Like virtually all websites, our hosting provider (Cloudflare) automatically records standard technical request data — such as IP address, browser type, requested URL, and timestamp — for security and performance purposes. This data is governed by <a href='https://www.cloudflare.com/privacypolicy/'>Cloudflare's privacy policy</a> and is not used to identify individual visitors."]),
+  ("3. Cookies and advertising",["We plan to display advertising served by Google AdSense. Third-party vendors, including Google, use cookies to serve ads based on a user's prior visits to websites. Google's use of advertising cookies enables it and its partners to serve ads based on your visits to this and other sites.","You may opt out of personalized advertising by visiting <a href='https://www.google.com/settings/ads'>Google Ads Settings</a>. You can also control cookies through your browser settings; blocking cookies will not affect the functionality of our tools."]),
+  ("4. Local storage",["We use your browser's local storage to remember small preferences such as your theme (light/dark) choice. This data stays on your device and can be removed by clearing your browser storage."]),
+  ("5. Children's privacy",["Our tools are general-purpose and do not knowingly collect personal information from children under 13."]),
+  ("6. Changes to this policy",["We may update this policy as the service evolves. Material changes will be reflected on this page with an updated date."]),
+  ("7. Contact",["Questions about this policy? Reach us at " + CONTACT + "."])]},
+"de": {"title":"Datenschutzerklärung","h1":"Datenschutzerklärung","updated":"2. Oktober 2026",
+ "meta":"Datenschutzerklärung von HeicGo — wie wir Daten in unseren Browser-Tools behandeln, einschließlich Cookies und Werbung.",
+ "intro":"HeicGo („wir“) betreibt kostenlose Browser-Tools für Bilder, darunter den HEIC-zu-JPG-Konverter auf heicgo-ecc.pages.dev. Diese Erklärung beschreibt, welche Daten bei der Nutzung erhoben werden — und welche nicht.",
+ "sections":[
+  ("1. Ihre Fotos und Dateien",["<b>Wir erfassen, speichern und übertragen Ihre Fotos nicht.</b> Die Konvertierung läuft vollständig lokal in Ihrem Browser per WebAssembly. Dateien werden auf Ihrem Gerät verarbeitet und niemals auf einen Server hochgeladen. Schließen oder Neuladen der Seite löscht alles."]),
+  ("2. Serverprotokolle",["Wie praktisch jede Website zeichnet unser Hosting-Anbieter (Cloudflare) automatisch Standard-Anfragedaten auf — IP-Adresse, Browsertyp, URL, Zeitstempel — für Sicherheit und Performance. Diese Daten unterliegen der <a href='https://www.cloudflare.com/privacypolicy/'>Datenschutzerklärung von Cloudflare</a> und dienen nicht zur Identifizierung einzelner Besucher."]),
+  ("3. Cookies und Werbung",["Wir planen, Werbung von Google AdSense anzuzeigen. Drittanbieter, einschließlich Google, verwenden Cookies, um auf frühere Besuche basierende Werbung einzublenden.","Personalisierte Werbung können Sie unter <a href='https://www.google.com/settings/ads'>Google Anzeigeneinstellungen</a> deaktivieren. Cookies lassen sich auch über die Browsereinstellungen steuern; ein Blockieren beeinträchtigt die Werkzeuge nicht."]),
+  ("4. Lokaler Speicher",["Wir nutzen den lokalen Speicher Ihres Browsers, um kleine Einstellungen wie das Design (hell/dunkel) zu merken. Diese Daten bleiben auf Ihrem Gerät."]),
+  ("5. Kinder",["Unsere Werkzeuge sind universell und erfassen wissentlich keine personenbezogenen Daten von Kindern unter 13."]),
+  ("6. Änderungen",["Diese Erklärung kann sich mit dem Dienst weiterentwickeln. Wesentliche Änderungen werden auf dieser Seite mit neuem Datum ausgewiesen."]),
+  ("7. Kontakt",["Fragen? Schreiben Sie an " + CONTACT + "."])]},
+"fr": {"title":"Politique de confidentialité","h1":"Politique de confidentialité","updated":"2 octobre 2026",
+ "meta":"Politique de confidentialité de HeicGo — traitement des données dans nos outils d'images navigateur, cookies et publicité tierce.",
+ "intro":"HeicGo (« nous ») exploite des outils d'images gratuits fonctionnant dans le navigateur, dont le convertisseur HEIC vers JPG sur heicgo-ecc.pages.dev. Cette politique explique quelles données sont — ou ne sont pas — collectées.",
+ "sections":[
+  ("1. Vos photos et fichiers",["<b>Nous ne collectons, ne stockons et ne transmettons pas vos photos.</b> La conversion s'effectue localement dans votre navigateur via WebAssembly. Les fichiers sont traités par votre appareil et jamais envoyés à un serveur. Fermer ou recharger la page efface tout."]),
+  ("2. Journaux serveur",["Comme presque tous les sites, notre hébergeur (Cloudflare) enregistre automatiquement les données techniques standard — adresse IP, type de navigateur, URL, horodatage — à des fins de sécurité et de performance. Ces données sont régies par la <a href='https://www.cloudflare.com/privacypolicy/'>politique de confidentialité de Cloudflare</a>."]),
+  ("3. Cookies et publicité",["Nous prévoyons d'afficher des publicités servies par Google AdSense. Des tiers, dont Google, utilisent des cookies pour diffuser des publicités selon les visites précédentes.","Vous pouvez désactiver la publicité personnalisée via <a href='https://www.google.com/settings/ads'>les paramètres des annonces Google</a> ; bloquer les cookies n'affecte pas nos outils."]),
+  ("4. Stockage local",["Nous utilisons le stockage local du navigateur pour mémoriser vos préférences (thème clair/sombre). Ces données restent sur votre appareil."]),
+  ("5. Enfants",["Nos outils sont généraux et ne collectent pas sciemment de données personnelles d'enfants de moins de 13 ans."]),
+  ("6. Modifications",["Cette politique peut évoluer avec le service ; les changements importants seront indiqués sur cette page avec une date mise à jour."]),
+  ("7. Contact",["Des questions ? Écrivez à " + CONTACT + "."])]},
+"es": {"title":"Política de privacidad","h1":"Política de privacidad","updated":"2 de octubre de 2026",
+ "meta":"Política de privacidad de HeicGo — cómo tratamos los datos en nuestras herramientas de imágenes en el navegador, cookies y publicidad de terceros.",
+ "intro":"HeicGo («nosotros») opera herramientas de imágenes gratuitas que funcionan en el navegador, incluido el convertidor de HEIC a JPG disponible en heicgo-ecc.pages.dev. Esta política explica qué datos se recopilan — y cuáles no — al usar nuestras herramientas.",
+ "sections":[
+  ("1. Tus fotos y archivos",["<b>No recopilamos, almacenamos ni transmitimos tus fotos.</b> La conversión ocurre localmente en tu navegador mediante WebAssembly. Los archivos los procesa tu propio dispositivo y nunca se suben a ningún servidor. Cerrar o recargar la página borra todo."]),
+  ("2. Registros del servidor",["Como casi todos los sitios web, nuestro proveedor de alojamiento (Cloudflare) registra automáticamente datos técnicos estándar — dirección IP, tipo de navegador, URL, marca de tiempo — con fines de seguridad y rendimiento. Estos datos se rigen por la <a href='https://www.cloudflare.com/privacypolicy/'>política de privacidad de Cloudflare</a>."]),
+  ("3. Cookies y publicidad",["Planeamos mostrar publicidad servida por Google AdSense. Proveedores externos, incluido Google, usan cookies para mostrar anuncios según visitas previsas del usuario.","Puedes desactivar la publicidad personalizada en <a href='https://www.google.com/settings/ads'>Configuración de anuncios de Google</a>; bloquear las cookies no afecta la funcionalidad de nuestras herramientas."]),
+  ("4. Almacenamiento local",["Usamos el almacenamiento local del navegador para recordar preferencias como el tema (claro/oscuro). Estos datos permanecen en tu dispositivo."]),
+  ("5. Privacidad de menores",["Nuestras herramientas son de uso general y no recopilan a sabiendas información personal de menores de 13 años."]),
+  ("6. Cambios en esta política",["Podemos actualizar esta política a medida que evolucione el servicio; los cambios relevantes se reflejarán en esta página con fecha actualizada."]),
+  ("7. Contacto",["¿Preguntas? Escríbenos a " + CONTACT + "."])]},
+"ja": {"title":"プライバシーポリシー","h1":"プライバシーポリシー","updated":"2026年10月2日",
+ "meta":"HeicGoのプライバシーポリシー — ブラウザベースの画像ツールにおけるデータ、Cookie、第三者広告の取り扱い。",
+ "intro":"HeicGo(「当社」)は、heicgo-ecc.pages.dev で提供する HEIC→JPG 変換ツールを含む、ブラウザ内で動作する無料の画像ツールを運営しています。本ポリシーは、ツール利用時に収集されるデータ — および収集されないデータ — について説明します。",
+ "sections":[
+  ("1. 写真とファイルについて",["<b>当社は写真の収集・保存・送信を行いません。</b>変換は WebAssembly によりブラウザ内でローカルに実行されます。ファイルはお客様のデバイスで処理され、サーバーにアップロードされることはありません。ページを閉じたり再読み込みするとすべて消えます。"]),
+  ("2. サーバーログ",["ほぼすべてのウェブサイトと同様、ホスティング事業者(Cloudflare)はセキュリティとパフォーマンスのため、IP アドレス、ブラウザ種別、URL、タイムスタンプ等の標準的な技術データを自動記録します。このデータは <a href='https://www.cloudflare.com/privacypolicy/'>Cloudflare のプライバシーポリシー</a>に準拠し、個人を特定するためには使用されません。"]),
+  ("3. Cookie と広告",["Google AdSense による広告を表示する予定です。Google を含む第三者ベンダーは、ユーザーの過去のアクセスに基づいて広告を配信するために Cookie を使用します。","パーソナライズ広告は <a href='https://www.google.com/settings/ads'>Google 広告設定</a>で無効化できます。Cookie のブロックはツールの機能に影響しません。"]),
+  ("4. ローカルストレージ",["テーマ(ライト/ダーク)などの小さな設定を記憶するためにブラウザのローカルストレージを使用します。このデータは端末上にのみ保存されます。"]),
+  ("5. 児童のプライバシー",["当社のツールは汎用であり、13 歳未満の個人情報を意図的に収集することはありません。"]),
+  ("6. ポリシーの変更",["サービスの進化に伴い本ポリシーを更新することがあります。重要な変更はこのページに反映されます。"]),
+  ("7. お問い合わせ",["ご質問は " + CONTACT + " まで。"])]},
+"ko": {"title":"개인정보 처리방침","h1":"개인정보 처리방침","updated":"2026년 10월 2일",
+ "meta":"HeicGo 개인정보 처리방침 — 브라우저 기반 이미지 도구, 쿠키 및 제3자 광고의 데이터 처리 방식.",
+ "intro":"HeicGo(「당사」)는 heicgo-ecc.pages.dev 에서 제공되는 HEIC→JPG 변환기를 포함해 브라우저에서 실행되는 무료 이미지 도구를 운영합니다. 본 방침은 도구 사용 시 수집되는 데이터 — 그리고 수집되지 않는 데이터 — 를 설명합니다.",
+ "sections":[
+  ("1. 사진 및 파일",["<b>당사는 사진을 수집·저장·전송하지 않습니다.</b> 변환은 WebAssembly를 통해 브라우저 안에서 로컬로 실행됩니다. 파일은 사용자 기기에서 처리되며 서버로 전송되지 않습니다. 페이지를 닫거나 새로고침하면 모두 지워집니다."]),
+  ("2. 서버 로그",["거의 모든 웹사이트와 마찬가지로 호스팅 업체(Cloudflare)는 보안과 성능을 위해 IP 주소, 브라우저 유형, URL, 타임스탬프 등 표준 기술 데이터를 자동 기록합니다. 이 데이터는 <a href='https://www.cloudflare.com/privacypolicy/'>Cloudflare 개인정보 처리방침</a>의 적용을 받으며 개인 식별에 사용되지 않습니다."]),
+  ("3. 쿠키와 광고",["Google AdSense 광고를 표시할 계획입니다. Google을 포함한 제3자는 사용자의 이전 방문을 기반으로 광고를 게재하기 위해 쿠키를 사용합니다.","맞춤 광고는 <a href='https://www.google.com/settings/ads'>Google 광고 설정</a>에서 비활성화할 수 있으며, 쿠키를 차단해도 도구 기능에는 영향이 없습니다."]),
+  ("4. 로컬 저장소",["테마(라이트/다크) 같은 소소한 설정을 기억하기 위해 브라우저 로컬 저장소를 사용합니다. 이 데이터는 기기에만 남습니다."]),
+  ("5. 아동 개인정보",["당사 도구는 범용이며 13세 미만 아동의 개인정보를 고의로 수집하지 않습니다."]),
+  ("6. 방침 변경",["서비스 발전에 따라 본 방침을 업데이트할 수 있으며, 중요한 변경은 이 페이지에 날짜와 함께 표시됩니다."]),
+  ("7. 문의",["궁금한 점은 " + CONTACT + " 로 연락 주세요."])]},
+"zh-cn": {"title":"隐私政策","h1":"隐私政策","updated":"2026年10月2日",
+ "meta":"HeicGo 隐私政策——浏览器内图像工具的数据处理方式,包括 Cookie 与第三方广告。",
+ "intro":"HeicGo(“我们”)运营免费的浏览器内图像工具,包括 heicgo-ecc.pages.dev 上的 HEIC 转 JPG 转换器。本政策说明你使用我们的工具时,哪些数据会——以及不会——被收集。",
+ "sections":[
+  ("1. 你的照片和文件",["<b>我们不收集、存储或传输你的照片。</b>所有转换均通过 WebAssembly 在你的浏览器本地完成。文件放入工具后由你自己的设备处理,绝不上传到任何服务器。关闭或刷新页面即全部清除。"]),
+  ("2. 服务器日志",["与几乎所有网站一样,我们的托管商(Cloudflare)会自动记录标准技术请求数据——IP 地址、浏览器类型、请求 URL、时间戳等——用于安全与性能目的。该数据受 <a href='https://www.cloudflare.com/privacypolicy/'>Cloudflare 隐私政策</a>约束,不用于识别个人访客。"]),
+  ("3. Cookie 与广告",["我们计划投放由 Google AdSense 提供的广告。包括 Google 在内的第三方供应商会使用 Cookie,依据用户对网站的既往访问投放广告。","你可以前往 <a href='https://www.google.com/settings/ads'>Google 广告设置</a>退出个性化广告;也可以通过浏览器设置管理 Cookie——屏蔽 Cookie 不影响工具功能。"]),
+  ("4. 本地存储",["我们使用浏览器本地存储记住少量偏好(如明暗主题选择)。这些数据仅保存在你的设备上,清除浏览器存储即可移除。"]),
+  ("5. 儿童隐私",["我们的工具为通用型,不会有意收集 13 岁以下儿童的个人信息。"]),
+  ("6. 政策变更",["服务演进时我们可能更新本政策,重大变更将在此页面反映并更新日期。"]),
+  ("7. 联系我们",["对本政策有疑问?联系 " + CONTACT + "。"])]},
+"zh-tw": {"title":"隱私權政策","h1":"隱私權政策","updated":"2026年10月2日",
+ "meta":"HeicGo 隱私權政策——瀏覽器內圖片工具的資料處理方式,包括 Cookie 與第三方廣告。",
+ "intro":"HeicGo(「我們」)營運免費的瀏覽器內圖片工具,包括 heicgo-ecc.pages.dev 上的 HEIC 轉 JPG 轉換器。本政策說明你使用我們的工具時,哪些資料會——以及不會——被收集。",
+ "sections":[
+  ("1. 你的照片和檔案",["<b>我們不收集、儲存或傳輸你的照片。</b>所有轉換均透過 WebAssembly 在你的瀏覽器本地完成。檔案放入工具後由你自己的裝置處理,絕不上傳到任何伺服器。關閉或重新整理頁面即全部清除。"]),
+  ("2. 伺服器日誌",["與幾乎所有網站一樣,我們的代管商(Cloudflare)會自動記錄標準技術請求資料——IP 位址、瀏覽器類型、請求 URL、時間戳記等——用於安全與效能目的。該資料受 <a href='https://www.cloudflare.com/privacypolicy/'>Cloudflare 隱私權政策</a>規範,不用於識別個人訪客。"]),
+  ("3. Cookie 與廣告",["我們計劃投放由 Google AdSense 提供的廣告。包括 Google 在內的第三方供應商會使用 Cookie,依據使用者對網站的既往造訪投放廣告。","你可以前往 <a href='https://www.google.com/settings/ads'>Google 廣告設定</a>退出個人化廣告;也可以透過瀏覽器設定管理 Cookie——封鎖 Cookie 不影響工具功能。"]),
+  ("4. 本地儲存",["我們使用瀏覽器本地儲存記住少量偏好(如深淺色主題選擇)。這些資料僅保存在你的裝置上,清除瀏覽器儲存即可移除。"]),
+  ("5. 兒童隱私",["我們的工具為通用型,不會有意收集 13 歲以下兒童的個人資料。"]),
+  ("6. 政策變更",["服務演進時我們可能更新本政策,重大變更將在此頁面反映並更新日期。"]),
+  ("7. 聯絡我們",["對本政策有疑問?聯絡 " + CONTACT + "。"])]},
+}
+
+ABT = {
+"en": {"title":"About HeicGo — Free, Private Image Tools","h1":"About HeicGo",
+ "meta":"HeicGo builds free browser-based image tools that respect your privacy. No upload, no signup, no watermark.",
+ "intro":"HeicGo makes small, sharp image tools that run <b>entirely in your browser</b>. Our first tool — a HEIC to JPG converter — was born from a simple observation: hundreds of millions of iPhone photos are trapped in a format that Windows and the web still struggle to open, and most \"free\" online converters make you upload private photos to a server just to change a file format.",
+ "sections":[
+  ("Our principles",["<b>Privacy is the default.</b> Files are processed locally; there is no upload step to remove, because there never was one.","<b>Free means free.</b> No signup, no watermark, no daily limits, no \"premium\" unlock.","<b>Fast beats fancy.</b> One page, one job, done in seconds."]),
+  ("What's next",["HeicGo currently serves 8 languages (English, German, French, Spanish, Japanese, Korean, Simplified and Traditional Chinese) and we're steadily adding tools. If an image task annoys you, chances are we're working on it."]),
+  ("Contact",["Say hello or report an issue: " + CONTACT + ". We read everything."])]},
+"de": {"title":"Über HeicGo","h1":"Über HeicGo",
+ "meta":"HeicGo entwickelt kostenlose Bild-Tools im Browser, die Ihre Privatsphäre respektieren. Kein Upload, keine Anmeldung, kein Wasserzeichen.",
+ "intro":"HeicGo baut kompakte Bild-Tools, die <b>vollständig im Browser</b> laufen. Unser erstes Werkzeug — ein HEIC-zu-JPG-Konverter — entstand aus einer einfachen Beobachtung: Hunderte Millionen iPhone-Fotos stecken in einem Format, das Windows und das Web kaum öffnen können, und die meisten „kostenlosen“ Online-Konverter verlangen das Hochladen privater Fotos auf einen Server, nur um ein Format zu ändern.",
+ "sections":[
+  ("Unsere Prinzipien",["<b>Privatsphäre ist Standard.</b> Dateien werden lokal verarbeitet; einen Upload-Schritt zu entfernen gibt es nicht, weil es ihn nie gab.","<b>Kostenlos heißt kostenlos.</b> Keine Anmeldung, kein Wasserzeichen, keine Tageslimits, keine versteckten Kosten.","<b>Schnell schlägt verspielt.</b> Eine Seite, eine Aufgabe, in Sekunden erledigt."]),
+  ("Wie es weitergeht",["HeicGo bedient derzeit 8 Sprachen (Englisch, Deutsch, Französisch, Spanisch, Japanisch, Koreanisch, vereinfachtes und traditionelles Chinesisch) und wir bauen kontinuierlich weitere Werkzeuge. Wenn eine Bildaufgabe nervt, arbeiten wir vermutlich daran."]),
+  ("Kontakt",["Schreiben Sie uns: " + CONTACT + ". Wir lesen alles."])]},
+"fr": {"title":"À propos de HeicGo","h1":"À propos de HeicGo",
+ "meta":"HeicGo crée des outils d'images gratuits dans le navigateur qui respectent votre vie privée. Sans téléversement, sans inscription, sans filigrane.",
+ "intro":"HeicGo crée des outils d'images compacts qui fonctionnent <b>entièrement dans votre navigateur</b>. Notre premier outil — un convertisseur HEIC vers JPG — est né d'un constat simple : des centaines de millions de photos iPhone sont piégées dans un format que Windows et le web peinent à ouvrir, et la plupart des convertisseurs « gratuits » vous font téléverser des photos privées sur un serveur juste pour changer de format.",
+ "sections":[
+  ("Nos principes",["<b>La confidentialité par défaut.</b> Les fichiers sont traités localement ; il n'y a aucune étape de téléversement à supprimer, puisqu'elle n'a jamais existé.","<b>Gratuit veut dire gratuit.</b> Sans inscription, sans filigrane, sans limite quotidienne, sans frais cachés.","<b>La rapidité avant l'esthétique.</b> Une page, une tâche, quelques secondes."]),
+  ("La suite",["HeicGo est disponible en 8 langues (anglais, allemand, français, espagnol, japonais, coréen, chinois simplifié et traditionnel) et nous ajoutons régulièrement des outils. Si une tâche image vous agace, on y travaille probablement."]),
+  ("Contact",["Dites bonjour ou signalez un problème : " + CONTACT + ". Nous lisons tout."])]},
+"es": {"title":"Sobre HeicGo","h1":"Sobre HeicGo",
+ "meta":"HeicGo crea herramientas de imagen gratuitas en el navegador que respetan tu privacidad. Sin subida, sin registro, sin marca de agua.",
+ "intro":"HeicGo crea herramientas de imagen pequeñas y precisas que funcionan <b>enteramente en tu navegador</b>. Nuestra primera herramienta — un convertidor de HEIC a JPG — nació de una observación simple: cientos de millones de fotos de iPhone quedan atrapadas en un formato que Windows y la web aún no abren, y la mayoría de convertidores «gratuitos» te hacen subir fotos privadas a un servidor solo para cambiar el formato.",
+ "sections":[
+  ("Nuestros principios",["<b>La privacidad por defecto.</b> Los archivos se procesan localmente; no hay paso de subida que eliminar, porque nunca existió.","<b>Gratis significa gratis.</b> Sin registro, sin marca de agua, sin límites diarios, sin «premium».","<b>La velocidad antes que la estética.</b> Una página, una tarea, segundos."]),
+  ("Qué viene después",["HeicGo está disponible en 8 idiomas (inglés, alemán, francés, español, japonés, coreano, chino simplificado y tradicional) y seguimos añadiendo herramientas. Si una tarea de imágenes te molesta, probablemente estamos en ello."]),
+  ("Contacto",["Saluda o reporta un problema: " + CONTACT + ". Leemos todo."])]},
+"ja": {"title":"HeicGo について","h1":"HeicGo について",
+ "meta":"HeicGo はプライバシーを尊重するブラウザ内画像ツールを開発しています。アップロード不要、登録不要、透かしなし。",
+ "intro":"HeicGo は <b>ブラウザ内で完全に動作</b>するコンパクトな画像ツールを作っています。最初のツール — HEIC→JPG 変換 — はシンプルな観察から生まれました:数億枚の iPhone 写真が Windows やウェブが開けない形式に閉じ込められ、ほとんどの「無料」オンライン変換ツールはフォーマットを変えるだけでプライベートな写真をサーバーにアップロードさせます。",
+ "sections":[
+  ("私たちの原則",["<b>プライバシーはデフォルト。</b>ファイルはローカルで処理され、除外すべきアップロード工程は最初から存在しません。","<b>無料は無料。</b>登録不要、透かしなし、日制限なし、「プレミアム」解錠もなし。","<b>速さは装飾に勝る。</b>1 ページ、1 つの仕事、数秒で完了。"]),
+  ("今後について",["HeicGo は現在 8 言語(英/独/仏/西/日/韓/簡体字/繁体字)に対応し、ツールを順次追加しています。画像の面倒な作業があれば、たぶん取り組んでいます。"]),
+  ("お問い合わせ",["ご挨拶や不具合報告は " + CONTACT + " まで。すべて目を通します。"])]},
+"ko": {"title":"HeicGo 소개","h1":"HeicGo 소개",
+ "meta":"HeicGo는 개인정보를 존중하는 브라우저 기반 무료 이미지 도구를 만듭니다. 업로드 없음, 가입 없음, 워터마크 없음.",
+ "intro":"HeicGo는 <b>브라우저 안에서 완전히 실행되는</b> 작고 정확한 이미지 도구를 만듭니다. 첫 도구 — HEIC→JPG 변환기 — 는 단순한 관찰에서 시작되었습니다:수억 장의 iPhone 사진이 Windows와 웹이 열지 못하는 형식에 갇혀 있고, 대부분의 「무료」 온라인 변환기는 형식 하나 바꾸는 일에 개인 사진을 서버에 업로드하라고 요구합니다.",
+ "sections":[
+  ("우리의 원칙",["<b>프라이버시가 기본값.</b> 파일은 로컬에서 처리되며, 제거할 업로드 단계는 애초에 존재하지 않습니다.","<b>무료는 무료.</b> 가입 없음, 워터마크 없음, 일일 제한 없음, 숨은 비용 없음.","<b>빠름이 화려함보다 낫다.</b> 한 페이지, 한 가지 작업, 몇 초면 끝."]),
+  ("앞으로의 계획",["HeicGo는 현재 8개 언어(영/독/불/서/일/한/간체/번체)를 지원하며 도구를 꾸준히 추가하고 있습니다. 이미지 작업이 불편하다면 아마 우리가 다루고 있을 겁니다."]),
+  ("문의",["인사나 버그 제보는 " + CONTACT + " 로. 모두 읽습니다."])]},
+"zh-cn": {"title":"关于 HeicGo","h1":"关于 HeicGo",
+ "meta":"HeicGo 打造尊重隐私的浏览器内免费图片工具。零上传、免注册、无水印。",
+ "intro":"HeicGo 专注做<b>完全在浏览器内运行</b>的小而精的图像工具。第一个工具——HEIC 转 JPG——源于一个简单的观察:数亿张 iPhone 照片被 Windows 和互联网打不开的格式困住,而大多数「免费」在线转换器为了改个格式,要你把私密照片上传到服务器。",
+ "sections":[
+  ("我们的原则",["<b>隐私是默认项。</b>文件本地处理;不存在“要去掉的上传环节”,因为从来没有。","<b>免费就是免费。</b>免注册、无水印、无次数限制、没有「高级版」解锁。","<b>快比花哨重要。</b>一个页面,一件事,几秒做完。"]),
+  ("接下来",["HeicGo 目前支持 8 种语言(英/德/法/西/日/韩/简中/繁中),工具在持续增加。哪件图像上的事让你烦,我们多半正在做它。"]),
+  ("联系",["打招呼或报告问题:<b>liuyulong667@gmail.com</b>。每一封我们都会读。"])]},
+"zh-tw": {"title":"關於 HeicGo","h1":"關於 HeicGo",
+ "meta":"HeicGo 打造尊重隱私的瀏覽器內免費圖片工具。零上傳、免註冊、無浮水印。",
+ "intro":"HeicGo 專注做<b>完全在瀏覽器內執行</b>的小而精的圖片工具。第一個工具——HEIC 轉 JPG——源於一個簡單的觀察:數億張 iPhone 照片被 Windows 和網際網路打不開的格式困住,而大多數「免費」線上轉換器為了改個格式,要你把私密照片上傳到伺服器。",
+ "sections":[
+  ("我們的原則",["<b>隱私是預設值。</b>檔案本地處理;不存在「要去掉的上傳環節」,因為從來沒有。","<b>免費就是免費。</b>免註冊、無浮水印、無次數限制、沒有「進階版」解鎖。","<b>快比花哨重要。</b>一個頁面,一件事,幾秒做完。"]),
+  ("接下來",["HeicGo 目前支援 8 種語言(英/德/法/西/日/韓/簡中/繁中),工具在持續增加。哪件圖片上的事讓你煩,我們多半正在做它。"]),
+  ("聯絡",["打招呼或回報問題:<b>liuyulong667@gmail.com</b>。每一封我們都會讀。"])]},
+}
+
+def build_sub(kind, code):
+    t = T[code]
+    d = (PRIV if kind == "privacy" else ABT)[code]
+    suburl = (lambda x: "https://heicgo-ecc.pages.dev/" if x == "en"
+              else f"https://heicgo-ecc.pages.dev/{kind}-{x}")
+    html = BASE
+    html = html.replace('<html lang="en">', f'<html lang="{code}">')
+    html = html.replace('<title>HEIC to JPG Converter — Free, Private, No Upload | HeicGo</title>',
+                        f'<title>{d["title"]} | HeicGo</title>')
+    html = html.replace('<meta name="description" content="Convert iPhone HEIC/HEIF photos to JPG online for free. 100% private — files never leave your browser. Batch conversion, no signup, no watermark.">',
+                        f'<meta name="description" content="{d["meta"]}">')
+    alt = "\n".join(f'  <link rel="alternate" hreflang="{x}" href="{suburl(x)}">' for x in ORDER)
+    alt += f'\n  <link rel="alternate" hreflang="x-default" href="{suburl("en")}">'
+    html = html.replace('</title>', '</title>\n' + alt, 1)
+    html = html.replace('__CANONICAL__', suburl(code))
+    html = html.replace('__NAV_PRIVACY__', NAV[code][3]).replace('__NAV_ABOUT__', NAV[code][4])
+    html = html.replace('__NAV_WHY__', NAV[code][0]).replace('__NAV_HOW__', NAV[code][1]).replace('__NAV_FAQ__', NAV[code][2])
+    html = html.replace('__LANGSWITCH__', lang_switcher(code, lambda x: (kind + ("" if x == "en" else "-" + x) + ".html")))
+    for a in ["why", "how", "faq"]:
+        html = html.replace(f'href="#{a}"', f'href="/#{a}"')
+    html = html.replace('</style>', '  .nav-links a.on { color:var(--brand); font-weight:600; }\n</style>')
+    link = f'<a href="/{kind}.html">' if code == "en" else f'<a href="/{kind}-{code}.html">'
+    html = html.replace(link, link.replace('<a ', '<a class="on" '))
+    body = f'<h1>{d["h1"]}</h1>\n'
+    if kind == "privacy":
+        body += f'  <p class="updated">{d["updated"]}</p>\n'
+    body += f'  <p>{d["intro"]}</p>\n'
+    for h2, paras in d["sections"]:
+        body += f'  <h2>{h2}</h2>\n' + "".join(f'  <p>{p}</p>\n' for p in paras)
+    i, j = html.find('<h1>'), html.find('</main>')
+    html = html[:i] + body + html[j:]
+    html = html.replace('HeicGo — free private image tools. © 2026', t["footer"])
+    return html
+
 for code in ORDER:
     p = Path(__file__).parent / T[code]["file"]
     p.write_text(build(code), encoding="utf-8")
     print("生成:", p.name)
 
-print("完成，共", len(ORDER), "个语言页")
+for code in ORDER:
+    suffix = "" if code == "en" else f"-{code}"
+    for kind in ["privacy", "about"]:
+        p = Path(__file__).parent / f"{kind}{suffix}.html"
+        p.write_text(build_sub(kind, code), encoding="utf-8")
+        print("生成:", p.name)
+
+print("完成，共", len(ORDER), "个语言页 + ", len(ORDER) * 2, "个子页")
